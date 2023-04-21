@@ -47,16 +47,14 @@ router.get('/', async (req, res) => {
   });
 
 
-  if (false) {
-    let error = await response.json();
+ const prediction = await response.json();
+  if (prediction.statusCode > 300) {
     res.statusCode = 500;
     res.end(JSON.stringify({ detail: error.detail }));
     return;
   }
 
-  const prediction = await response.json();
   res.statusCode = 201;
-  console.log(prediction, req.body)
   res.end(JSON.stringify(prediction));
 });
 

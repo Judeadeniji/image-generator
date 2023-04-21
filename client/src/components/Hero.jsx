@@ -37,7 +37,7 @@ function Hero() {
           </p>
           <a href="#" className="bg-blue-600 text-white py-3 px-6 rounded-lg
           font-bold text-lg hover:bg-blue-500 hover:bg-transparent border-2
-          border-blue-500">
+          hover:border-blue-500 hover:text-blue-500">
             Get Started for Free
           </a>
         </div>

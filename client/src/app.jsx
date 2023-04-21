@@ -1,17 +1,18 @@
 import { Core } from "utiliti-js";
-import { If } from "brace-js/controls";
-import { createData } from "brace-js";
+import { createData, If } from "brace-js";
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Hero, { CTA } from './components/Hero';
+import { ImageList } from './components/ImageList';
 const http = new Core.Http();
 const prediction$ = createData(null);
 const error$ = createData(false);
 const isPending$ = createData(false);
+const toggle$ = createData(true);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-const handleSubmit = async (e) => {
+const handleImageFetch = async (e) => {
   e.preventDefault();
   isPending$.set(true);
   const response = await http.post(
@@ -117,8 +118,7 @@ function Features() {
   );
 }
 
-function Playground() {
-  
+function Playground({toggle}) {
   return (
    <div className="container mx-auto px-4">
    <div className="border rounded-lg mt-8 mb-8 sm:mt-16 sm:mb-16 md:mt-24
@@ -138,7 +138,7 @@ function Playground() {
       :
     </p>
 
-    <form on:submit={handleSubmit} className="mb-8">
+    <form on:submit={handleImageFetch} className="mb-8" key="fetch">
       <input
         type="text"
         name="prompt"
@@ -148,8 +148,14 @@ function Playground() {
       <button
         type="submit"
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4
-        rounded mt-4">
+        rounded mt-4 mr-3">
         Go!
+      </button>
+      <button
+        type="button"
+        className="bg-amber-500 hover:bg-amber-400 text-white font-bold py-2 px-4
+        rounded mt-4" on:click={() => toggle.update(show => !show)}>
+        Previously Genrated
       </button>
     </form>
 
@@ -176,10 +182,12 @@ Status: { prediction$().code ? 'Unavailable' : prediction$().status || 'idle'}
 function App() {
   return (
     <main className="bg-gray-100 min-h-screen">
-      <Header />
-      <Hero />
+      <Header key={Symbol('header')} />
+      <Hero key={Symbol('hero')} />
       <Features />
-      <Playground />    
+     <If eval={toggle$()} else={<ImageList toggle={toggle$} />}>
+        <Playground toggle={toggle$}/>
+     </If>
       <CTA />
       <Footer />
     </main>
