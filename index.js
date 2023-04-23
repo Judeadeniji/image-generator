@@ -4,7 +4,9 @@ const dotenv = require('dotenv');
 const cors = require("cors");
 const predictionsRouter = require('./api/predictions');
 const DallERouter = require('./api/dall-e');
+const StabilityRouter = require('./api/stability');
 const predictionStatusRouter = require('./api/id');
+const GZipper = require("express-static-gzip");
 
 // load environment variables from .env file
 dotenv.config();
@@ -30,6 +32,9 @@ app.use(express.static(path.join(__dirname, "client","www","assets")));
 // use dall-e creation router
 app.use('/api/dall-e', DallERouter);
 
+// use stability creation router
+app.use('/api/stability', StabilityRouter);
+
 // use prediction creation router
 app.use('/api/predictions', predictionsRouter);
 
@@ -37,7 +42,7 @@ app.use('/api/predictions', predictionsRouter);
 app.use('/api/predictions', predictionStatusRouter);
 
 // use the default home page
-app.use("/", express.static(path.join(__dirname, "client/www")));
+app.use("/", GZipper(path.join(__dirname, "client/www")));
 
 // start server
 const PORT = process.env.PORT || 5000;
